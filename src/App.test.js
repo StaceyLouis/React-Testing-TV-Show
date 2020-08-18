@@ -1,10 +1,11 @@
 import React from 'react'
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, } from '@testing-library/react';
+import userEvent from '@testing-library/user-event'
 import App from './App';
-import { fetchShow } from './api/fetchShow'
+import { fetchShow } from './api/fetchShows'
 import { act } from "react-dom/test-utils"
 
-jest.mock('./api/fetchShow');
+jest.mock('./api/fetchShows');
 
 const episodesData = {
   data: 
@@ -612,7 +613,7 @@ const episodesData = {
 test("App renders", () => {
     fetchShow.mockResolvedValueOnce(episodesData);
     render(<App/>);
-    // screen.debug();
+    
 });
 
 test("fetch data works", async () => {
@@ -621,6 +622,9 @@ test("fetch data works", async () => {
         await render(<App/>);
     })
 
-    fireEvent.click(screen.getByText(/select a season/i));
-    screen.debug();
+    expect(screen.getByText(/Select a season/i)).toBeInTheDocument()
+    userEvent.selectOptions(screen.getByText(/select a season/i))
+
+    userEvent.click(screen.getByText(/season 1/i));
+    
 })
